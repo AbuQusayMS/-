@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 الأرشيف الفكري | مكتبتي الشخصية</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        secondary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    fontFamily: {
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'slide-down': 'slideDown 0.3s ease-out',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --color-primary: #0ea5e9;
+            --color-secondary: #8b5cf6;
+        }
+        
+        * {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+        
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        .hide-scrollbar { 
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Glass effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        /* Book shadow effect */
+        .book-shadow {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Reading progress */
+        .reading-progress {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reading-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.1), rgba(139, 92, 246, 0.1));
+            width: 0;
+            transition: width 1s ease;
+        }
+        
+        /* Smooth transitions */
+        .view-section {
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Menu overlay animation */
+        #menu-overlay {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #menu-overlay.open {
+            transform: translateY(0);
+        }
+        
+        /* Bottom nav safe area for iOS */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Post type colors */
+        .post-type-quote { background-color: #f3e8ff; color: #7c3aed; }
+        .post-type-note { background-color: #dbeafe; color: #1d4ed8; }
+        .post-type-review { background-color: #dcfce7; color: #15803d; }
+        .post-type-reflection { background-color: #fef3c7; color: #92400e; }
+        
+        /* Status badges */
+        .status-read { background-color: #dcfce7; color: #15803d; }
+        .status-reading { background-color: #fef9c3; color: #854d0e; }
+        .status-want { background-color: #e0e7ff; color: #3730a3; }
+        .status-reread { background-color: #fce7f3; color: #9d174d; }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-tajawal">
+
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-600 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-book-open text-white text-sm"></i>
+                </div>
+                <h1 class="text-xl font-bold gradient-text">الأرشيف الفكري</h1>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button id="search-btn" class="text-gray-500 hover:text-gray-900 transition p-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                
+                <!-- Admin badge (only visible in app mode) -->
+                <div id="admin-badge" class="hidden items-center gap-1 bg-gradient-to-r from-primary-500 to-secondary-600 text-white text-xs px-2 py-1 rounded-full">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>أنت</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Bar (Hidden by default) -->
+        <div id="search-bar" class="hidden container mx-auto px-4 pb-3">
+            <div class="relative">
+                <input type="text" placeholder="ابحث في المكتبة، الاقتباسات، المنشورات..." 
+                       class="w-full px-4 py-3 pr-12 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm">
+                <button class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-container" class="container mx-auto px-4 py-4 min-h-screen">
+        
+        <!-- Home View (Timeline) -->
+        <section id="view-home" class="view-section animate-fade-in">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">الخلاصة الفكرية</h2>
+                <p class="text-sm text-gray-500">أحدث الأفكار والملاحظات والاقتباسات من مكتبتي</p>
+            </div>
+            
+            <!-- Timeline -->
+            <div class="space-y-4">
+                <!-- Quote Post -->
+                <div class="bg-white rounded-2xl book-shadow p-5 animate-slide-up">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="post-type-quote text-xs font-medium px-3 py-1 rounded-full">✍️ اقتباس</span>
+                            <span class="text-xs text-gray-400">منذ يومين</span>
+                        </div>
+                        <button class="text-gray-300 hover:text-gray-500">
+                            <i class="fa-regular fa-bookmark"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-gray-800 text-lg leading-relaxed border-r-4 border-purple-100 pr-3">
+                            "القراءة ليست هروباً من الواقع، بل هي غوص في عمق الواقع لفهمه بشكل أفضل. إنها تمرين في التعاطف مع تجارب الآخرين وأفكارهم."
+                        </p>
+                    </div>
+                    
+                    <!-- Linked Book -->
+                    <div onclick="navigateTo('book-details', {id: 'book-1'})" 
+                         class="bg-gradient-to-r from-purple-50 to-indigo-50 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:from-purple-100 hover:to-indigo-100 transition-all">
+                        <div class="w-10 h-14 bg-gray-300 rounded overflow-hidden flex-shrink-0 shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=150&h=220&fit=crop" alt="غلاف" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-gray-900">فن القراءة</p>
+                            <p class="text-xs text-gray-600">ألبرتو مانغويل • 2020</p>
+                        </div>
+                        <div class="flex items-center gap-1 text-amber-400">
+                            <i class="fa-solid fa-star text-xs"></i>
+                            <i class="fa-solid fa-star text-xs"></i>
+                            <i class="fa-solid fa-star text-xs"></i>
+                            <i class="fa-solid fa-star text-xs"></i>
+                            <i class="fa-solid fa-star-half-stroke text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="mt-3 flex flex-wrap gap-1">
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">#الفلسفة</span>
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">#القراءة</span>
+                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">#التفكير</span>
+                    </div>
+                </div>
+                
+                <!-- Reflection Post -->
+                <div class="bg-white rounded-2xl book-shadow p-5 animate-slide-up">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="post-type-reflection text-xs font-medium px-3 py-1 rounded-full">🧠 تأمل</span>
+                            <span class="text-xs text-gray-400">الآن</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-reading text-xs font-medium px-2 py-1 rounded">جاري القراءة</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-800 leading-relaxed mb-3">
+                        لاحظت اليوم أن الكتب التي قرأتها في العشرينات أثرت في تكوين شخصيتي أكثر من الكتب التي أقرؤها الآن، ربما لأن العقل كان أكثر مرونة وقابلية للتشكيل. هناك علاقة عكسية بين العمر وقابلية التأثر بالكتب الجديدة.
+                    </p>
+                    
+                    <!-- Progress -->
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>التقدم في القراءة</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-gradient-to-r from-primary-500 to-secondary-600 h-1.5 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add New Post Button (Only in App Mode) -->
+                <div id="add-post-btn" class="hidden animate-pulse-slow">
+                    <button onclick="showCreatePostModal()" class="w-full bg-gradient-to-r from-primary-500 to-secondary-600 text-white rounded-2xl p-4 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="font-medium">إضافة منشور جديد</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Library View -->
+        <section id="view-library" class="view-section hidden animate-fade-in">
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-bold text-gray-900">مكتبتي الشخصية</h2>
+                    <div class="flex items-center gap-2">
+                        <button id="filter-btn" class="text-gray-500 hover:text-gray-900 p-2">
+                            <i class="fa-solid fa-filter"></i>
+                        </button>
+                        <div class="flex bg-gray-100 rounded-lg p-1">
+                            <button data-view="grid" class="view-toggle active px-3 py-1 rounded text-sm">شبكة</button>
+                            <button data-view="list" class="view-toggle px-3 py-1 rounded text-sm">قائمة</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Summary -->
+                <div class="flex items-center justify-between bg-gradient-to-r from-primary-50 to-secondary-50 p-3 rounded-xl mb-4">
+                    <div class="text-center">
+                        <span class="block text-lg font-bold text-gray-900">142</span>
+                        <span class="text-xs text-gray-600">كتاب</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-lg font-bold text-gray-900">32</span>
+                        <span class="text-xs text-gray-600">جاري القراءة</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-lg font-bold text-gray-900">87</span>
+                        <span class="text-xs text-gray-600">مكتمل</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-lg font-bold text-gray-900">23</span>
+                        <span class="text-xs text-gray-600">للرجوع</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Books Grid -->
+            <div id="books-grid" class="grid grid-cols-3 gap-4">
+                <!-- Book 1 -->
+                <div class="book-item cursor-pointer animate-slide-up" onclick="navigateTo('book-details', {id: 'book-1'})">
+                    <div class="relative">
+                        <div class="aspect-[2/3] bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl overflow-hidden shadow-lg book-shadow">
+                            <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-book-open text-primary-600 text-sm"></i>
+                        </div>
+                        <span class="absolute top-2 right-2 status-read text-xs font-medium px-2 py-1 rounded-full">✓</span>
+                    </div>
+                    <div class="mt-2">
+                        <h3 class="text-sm font-bold text-gray-900 truncate">فن القراءة</h3>
+                        <p class="text-xs text-gray-500 truncate">ألبرتو مانغويل</p>
+                        <div class="flex items-center justify-between mt-1">
+                            <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="text-gray-600">4.5</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2023</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-item cursor-pointer animate-slide-up" onclick="navigateTo('book-details', {id: 'book-2'})">
+                    <div class="relative">
+                        <div class="aspect-[2/3] bg-gradient-to-br from-amber-200 to-amber-300 rounded-xl overflow-hidden shadow-lg book-shadow">
+                            <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=450&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-book text-secondary-600 text-sm"></i>
+                        </div>
+                        <span class="absolute top-2 right-2 status-reading text-xs font-medium px-2 py-1 rounded-full">●</span>
+                    </div>
+                    <div class="mt-2">
+                        <h3 class="text-sm font-bold text-gray-900 truncate">مقدمة ابن خلدون</h3>
+                        <p class="text-xs text-gray-500 truncate">ابن خلدون</p>
+                        <div class="flex items-center justify-between mt-1">
+                            <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-xs text-gray-400">1377</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Shelves -->
+            <div class="mt-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📚 الرفوف الخاصة</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="#" onclick="navigateTo('status', {status: 'recommended'})" class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100 hover:border-green-300 transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-gray-900">أعجبني ⭐</h4>
+                                <p class="text-xs text-gray-500 mt-1">23 كتاب</p>
+                            </div>
+                            <i class="fa-solid fa-star text-yellow-400 text-xl"></i>
+                        </div>
+                    </a>
+                    
+                    <a href="#" onclick="navigateTo('status', {status: 'reread'})" class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100 hover:border-purple-300 transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-gray-900">أعدت قراءته 🔄</h4>
+                                <p class="text-xs text-gray-500 mt-1">7 كتب</p>
+                            </div>
+                            <i class="fa-solid fa-rotate text-purple-400 text-xl"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile View -->
+        <section id="view-profile" class="view-section hidden animate-fade-in">
+            <div class="text-center mb-8 pt-2">
+                <div class="relative w-28 h-28 mx-auto mb-4">
+                    <div class="w-full h-full bg-gradient-to-br from-primary-500 to-secondary-600 rounded-full p-1">
+                        <div class="w-full h-full bg-white rounded-full overflow-hidden border-4 border-white">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop" alt="صورة الملف" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-lg">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-pen text-white text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">أحمد الفكري</h2>
+                <p class="text-sm text-gray-500 mb-2">قارئ، مبرمج، ومحب للمعرفة</p>
+                <div class="flex items-center justify-center gap-1 text-gray-500 text-sm">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>المملكة العربية السعودية</span>
+                </div>
+            </div>
+
+            <!-- Reading Stats -->
+            <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📊 إحصائيات القراءة</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-4 rounded-xl book-shadow">
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-primary-600">142</span>
+                            <span class="text-xs text-gray-500">كتاب مقروء</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl book-shadow">
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-secondary-600">1,240</span>
+                            <span class="text-xs text-gray-500">يوم قراءة</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl book-shadow">
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-amber-600">847</span>
+                            <span class="text-xs text-gray-500">اقتباس محفوظ</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl book-shadow">
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-emerald-600">68</span>
+                            <span class="text-xs text-gray-500">مراجعة مكتوبة</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reading Streak -->
+                <div class="mt-4 bg-gradient-to-r from-primary-500 to-secondary-600 text-white p-4 rounded-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold">سلسلة القراءة</h4>
+                            <p class="text-sm opacity-90">42 يوم متواصل</p>
+                        </div>
+                        <div class="text-2xl font-bold">🔥 42</div>
+                    </div>
+                    <div class="mt-3 w-full bg-white/20 rounded-full h-2">
+                        <div class="bg-white h-2 rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📅 النشاط الأخير</h3>
+                <div class="space-y-3">
+                    <div class="bg-white p-3 rounded-xl book-shadow flex items-center gap-3">
+                        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-book-open text-primary-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">أضفت كتاب جديد</p>
+                            <p class="text-xs text-gray-500">قبل ساعتين</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl book-shadow flex items-center gap-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-quote-right text-purple-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">سجلت اقتباس جديد</p>
+                            <p class="text-xs text-gray-500">منذ يوم</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Details View -->
+        <section id="view-book-details" class="view-section hidden animate-fade-in">
+            <div class="mb-6">
+                <button onclick="navigateTo('library')" class="text-gray-500 hover:text-gray-900 flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="text-sm">عودة للمكتبة</span>
+                </button>
+                
+                <!-- Book Header -->
+                <div class="flex gap-4 mb-6">
+                    <div class="w-28 flex-shrink-0">
+                        <div class="aspect-[2/3] bg-gradient-to-br from-gray-300 to-gray-400 rounded-xl overflow-hidden shadow-xl">
+                            <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=250&h=375&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 class="text-xl font-bold text-gray-900 mb-1">مقدمة ابن خلدون</h1>
+                                <p class="text-sm text-gray-600 mb-2">عبد الرحمن ابن خلدون</p>
+                            </div>
+                            <div class="flex items-center gap-1 text-amber-400">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="status-read text-xs font-medium px-3 py-1 rounded-full">تمت القراءة</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">تاريخ</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">فلسفة</span>
+                        </div>
+                        
+                        <div class="text-xs text-gray-500 space-y-1">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar"></i>
+                                <span>سنة النشر: 1377</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>تاريخ القراءة: مارس 2023</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-flag"></i>
+                                <span>الصفحات: 450</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button data-tab="summary" class="tab-btn active px-4 py-2 text-sm font-medium text-primary-600 border-b-2 border-primary-600">الملخص</button>
+                    <button data-tab="quotes" class="tab-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">الاقتباسات (12)</button>
+                    <button data-tab="timeline" class="tab-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">الخط الزمني</button>
+                </div>
+                
+                <!-- Tab Content: Summary -->
+                <div id="tab-summary" class="tab-content">
+                    <h3 class="font-bold text-gray-900 mb-3">ملخصي الشخصي</h3>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        كتاب مؤسس لعلم الاجتماع، يتحدث فيه ابن خلدون عن أحوال البشر وطبائع العمران. يعتبر هذا الكتاب من أهم الكتب التي غيرت نظرتي لتاريخ الأمم وتطورها. لقد استفدت بشكل خاص من مفهوم العصبية والدورة الحضارية التي يطرحها.
+                    </p>
+                    
+                    <h3 class="font-bold text-gray-900 mb-3">المنشورات المرتبطة</h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="post-type-note text-xs font-medium px-2 py-1 rounded">ملاحظة</span>
+                                <span class="text-xs text-gray-400">23 فبراير 2023</span>
+                            </div>
+                            <p class="text-sm">فهمت اليوم لماذا تعتبر "العصبية" أساساً للدولة عند ابن خلدون</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab Content: Quotes -->
+                <div id="tab-quotes" class="tab-content hidden">
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl">
+                            <p class="text-gray-800 text-lg leading-relaxed border-r-4 border-purple-200 pr-3">
+                                "إن التاريخ في ظاهره لا يزيد عن الإخبار، وفي باطنه نظر وتحقيق."
+                            </p>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-xs text-gray-500">صفحة 45</span>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab Content: Timeline -->
+                <div id="tab-timeline" class="tab-content hidden">
+                    <div class="relative pl-6 ml-1">
+                        <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500 to-secondary-600"></div>
+                        
+                        <div class="relative mb-6">
+                            <div class="absolute -left-7 top-0 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-gray-900">بداية القراءة</h4>
+                                <p class="text-sm text-gray-500">10 يناير 2023</p>
+                                <p class="text-xs text-gray-600 mt-1">بدأت قراءة المقدمة بعد سنوات من التأجيل</p>
+                            </div>
+                        </div>
+                        
+                        <div class="relative mb-6">
+                            <div class="absolute -left-7 top-0 w-4 h-4 rounded-full bg-yellow-500 border-2 border-white"></div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-gray-900">توقف مؤقت</h4>
+                                <p class="text-sm text-gray-500">1 فبراير 2023</p>
+                                <p class="text-xs text-gray-600 mt-1">توقفت لقراءة مصادر عن التاريخ الإسلامي</p>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <div class="absolute -left-7 top-0 w-4 h-4 rounded-full bg-primary-600 border-2 border-white"></div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-gray-900">إنهاء القراءة</h4>
+                                <p class="text-sm text-gray-500">15 مارس 2023</p>
+                                <p class="text-xs text-gray-600 mt-1">أكملت الكتاب وبدأت في كتابة الملخص</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status View -->
+        <section id="view-status" class="view-section hidden animate-fade-in">
+            <!-- Dynamic content loaded based on status -->
+        </section>
+
+        <!-- Quotes View -->
+        <section id="view-quotes" class="view-section hidden animate-fade-in">
+            <!-- Dynamic content loaded based on quotes -->
+        </section>
+
+    </main>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-white z-50 flex flex-col p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-600 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-book-open text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900">القائمة الرئيسية</h2>
+            </div>
+            <button onclick="toggleMenu()" class="text-2xl text-gray-500 hover:text-gray-900">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="space-y-3 flex-1">
+            <a href="#" onclick="navigateTo('library'); toggleMenu()" 
+               class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition group">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg flex items-center justify-center group-hover:from-indigo-200 group-hover:to-indigo-300">
+                    <i class="fa-solid fa-book text-indigo-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900">المكتبة الشاملة</h3>
+                    <p class="text-sm text-gray-500">كل الكتب والمؤلفات والتصنيفات</p>
+                </div>
+                <i class="fa-solid fa-arrow-left text-gray-300 group-hover:text-gray-400"></i>
+            </a>
+            
+            <a href="#" onclick="navigateTo('quotes'); toggleMenu()" 
+               class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition group">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center group-hover:from-purple-200 group-hover:to-pink-200">
+                    <i class="fa-solid fa-quote-right text-purple-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900">كل الاقتباسات</h3>
+                    <p class="text-sm text-gray-500">البحث والتصفية والاستكشاف</p>
+                </div>
+                <i class="fa-solid fa-arrow-left text-gray-300 group-hover:text-gray-400"></i>
+            </a>
+            
+            <a href="#" onclick="showStatuses()" 
+               class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition group">
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-100 to-amber-100 rounded-lg flex items-center justify-center group-hover:from-orange-200 group-hover:to-amber-200">
+                    <i class="fa-solid fa-layer-group text-orange-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900">الرفوف (Statuses)</h3>
+                    <p class="text-sm text-gray-500">أعجبني، أنصح به، للرجوع لاحقاً...</p>
+                </div>
+                <i class="fa-solid fa-arrow-left text-gray-300 group-hover:text-gray-400"></i>
+            </a>
+            
+            <a href="#" onclick="navigateTo('profile'); toggleMenu()" 
+               class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition group">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg flex items-center justify-center group-hover:from-blue-200 group-hover:to-cyan-200">
+                    <i class="fa-solid fa-chart-pie text-blue-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900">إحصائيات القراءة</h3>
+                    <p class="text-sm text-gray-500">تحليل وتقارير عن عاداتك</p>
+                </div>
+                <i class="fa-solid fa-arrow-left text-gray-300 group-hover:text-gray-400"></i>
+            </a>
+            
+            <a href="#" onclick="showChangedBooks()" 
+               class="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition group">
+                <div class="w-12 h-12 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-lg flex items-center justify-center group-hover:from-yellow-200 group-hover:to-amber-200">
+                    <i class="fa-solid fa-star text-yellow-600 text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-900">كتب غيرت تفكيري</h3>
+                    <p class="text-sm text-gray-500">الأكثر تأثيراً في رحلتك</p>
+                </div>
+                <i class="fa-solid fa-arrow-left text-gray-300 group-hover:text-gray-400"></i>
+            </a>
+            
+            <div class="border-t border-gray-200 pt-4 mt-4">
+                <a href="#" onclick="toggleMode()" 
+                   class="flex items-center gap-4 p-4 bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 rounded-xl transition group border border-primary-100">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-600 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-user-shield text-white text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gray-900">وضع التطبيق (أنت)</h3>
+                        <p class="text-sm text-gray-500">التحويل بين وضع القراءة والتحرير</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-left text-primary-400"></i>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Footer -->
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <div class="text-center text-gray-400 text-sm">
+                <p>📚 الأرشيف الفكري - نظام إدارة المكتبة الشخصية</p>
+                <p class="mt-1">نسخة الموقع (قراءة فقط) | © 2024</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full glass-effect border-t border-gray-200 z-40 pb-safe">
+        <div class="flex justify-around items-center h-16 max-w-lg mx-auto">
+            <!-- Home Button -->
+            <button onclick="navigateTo('home')" 
+                    class="nav-btn flex flex-col items-center justify-center w-1/3 h-full transition-all active">
+                <div class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-house text-xl text-primary-600"></i>
+                </div>
+                <span class="text-[10px] font-medium text-primary-600 mt-0.5">الرئيسية</span>
+            </button>
+            
+            <!-- Library Button -->
+            <button onclick="navigateTo('library')" 
+                    class="nav-btn flex flex-col items-center justify-center w-1/3 h-full transition-all">
+                <div class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-book text-xl text-gray-400"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-400 mt-0.5">المكتبة</span>
+            </button>
+            
+            <!-- Profile Button -->
+            <button onclick="navigateTo('profile')" 
+                    class="nav-btn flex flex-col items-center justify-center w-1/3 h-full transition-all">
+                <div class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-xl text-gray-400"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-400 mt-0.5">ملفي</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Create Post Modal (Only in App Mode) -->
+    <div id="create-post-modal" class="fixed inset-0 bg-black/50 z-[60] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 animate-slide-up">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-gray-900">إنشاء منشور جديد</h3>
+                <button onclick="hideCreatePostModal()" class="text-gray-400 hover:text-gray-900">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">نوع المنشور</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="post-type-select p-3 bg-gray-100 rounded-lg text-center hover:bg-gray-200">
+                            <i class="fa-solid fa-quote-right text-purple-500 block mb-1"></i>
+                            <span class="text-sm font-medium">اقتباس</span>
+                        </button>
+                        <button class="post-type-select p-3 bg-gray-100 rounded-lg text-center hover:bg-gray-200">
+                            <i class="fa-solid fa-pen text-blue-500 block mb-1"></i>
+                            <span class="text-sm font-medium">ملاحظة</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">النص</label>
+                    <textarea placeholder="اكتب محتوى المنشور هنا..." 
+                              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm h-32"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ربط بكتاب</label>
+                    <select class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm">
+                        <option value="">اختياري - يمكن أن يكون منشور عام</option>
+                        <option value="book-1">فن القراءة - ألبرتو مانغويل</option>
+                        <option value="book-2">مقدمة ابن خلدون - ابن خلدون</option>
+                    </select>
+                </div>
+                
+                <div class="pt-4 flex gap-3">
+                    <button onclick="hideCreatePostModal()" class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">
+                        إلغاء
+                    </button>
+                    <button class="flex-1 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 text-white rounded-xl hover:shadow-lg">
+                        نشر
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // App State
+        const appState = {
+            currentView: 'home',
+            isAppMode: false, // true for admin mode, false for read-only
+            currentBookId: null,
+            currentStatus: null
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set active nav on load
+            updateActiveNav('home');
+            
+            // Add click listeners to tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Add click listeners to view toggle buttons
+            document.querySelectorAll('.view-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const viewType = this.getAttribute('data-view');
+                    toggleLibraryView(viewType);
+                });
+            });
+            
+            // Search button toggle
+            document.getElementById('search-btn').addEventListener('click', function() {
+                const searchBar = document.getElementById('search-bar');
+                searchBar.classList.toggle('hidden');
+            });
+            
+            // Initialize post type selectors
+            document.querySelectorAll('.post-type-select').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.post-type-select').forEach(b => {
+                        b.classList.remove('ring-2', 'ring-primary-500');
+                    });
+                    this.classList.add('ring-2', 'ring-primary-500');
+                });
+            });
+        });
+
+        // Navigation function
+        function navigateTo(viewId, params = {}) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show target view
+            const targetView = document.getElementById(`view-${viewId}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                
+                // Add animation
+                targetView.classList.add('animate-fade-in');
+                setTimeout(() => {
+                    targetView.classList.remove('animate-fade-in');
+                }, 500);
+                
+                // Update state
+                appState.currentView = viewId;
+                
+                // Handle specific views
+                if (viewId === 'book-details' && params.id) {
+                    appState.currentBookId = params.id;
+                    loadBookDetails(params.id);
+                } else if (viewId === 'status' && params.status) {
+                    appState.currentStatus = params.status;
+                    loadStatusView(params.status);
+                } else if (viewId === 'quotes') {
+                    loadQuotesView();
+                }
+            }
+            
+            // Update navigation
+            updateActiveNav(viewId);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update active navigation button
+        function updateActiveNav(viewId) {
+            // Reset all buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const icon = btn.querySelector('i');
+                const text = btn.querySelector('span');
+                
+                if (icon) icon.classList.remove('text-primary-600');
+                if (icon) icon.classList.add('text-gray-400');
+                if (text) text.classList.remove('text-primary-600');
+                if (text) text.classList.add('text-gray-400');
+            });
+            
+            // Activate current button
+            let activeBtn;
+            if (viewId === 'home') {
+                activeBtn = document.querySelector('button[onclick="navigateTo(\'home\')"]');
+            } else if (viewId === 'library') {
+                activeBtn = document.querySelector('button[onclick="navigateTo(\'library\')"]');
+            } else if (viewId === 'profile') {
+                activeBtn = document.querySelector('button[onclick="navigateTo(\'profile\')"]');
+            }
+            
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                const icon = activeBtn.querySelector('i');
+                const text = activeBtn.querySelector('span');
+                
+                if (icon) {
+                    icon.classList.remove('text-gray-400');
+                    icon.classList.add('text-primary-600');
+                }
+                if (text) {
+                    text.classList.remove('text-gray-400');
+                    text.classList.add('text-primary-600');
+                }
+            }
+        }
+
+        // Toggle menu overlay
+        function toggleMenu() {
+            const menu = document.getElementById('menu-overlay');
+            menu.classList.toggle('open');
+            
+            // Prevent scrolling when menu is open
+            if (menu.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Toggle between app mode (admin) and site mode (read-only)
+        function toggleMode() {
+            appState.isAppMode = !appState.isAppMode;
+            
+            // Update UI based on mode
+            if (appState.isAppMode) {
+                // Show admin features
+                document.getElementById('admin-badge').classList.remove('hidden');
+                document.getElementById('add-post-btn').classList.remove('hidden');
+                
+                // Change menu button to indicate app mode
+                const menuBtn = document.querySelector('button[onclick="toggleMenu()"]');
+                if (menuBtn) {
+                    const icon = menuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-user-shield');
+                    }
+                }
+                
+                // Show edit buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.classList.remove('hidden');
+                });
+                
+                alert('✅ تم التبديل إلى وضع التطبيق (أنت) - الآن يمكنك الإضافة والتعديل');
+            } else {
+                // Hide admin features
+                document.getElementById('admin-badge').classList.add('hidden');
+                document.getElementById('add-post-btn').classList.add('hidden');
+                
+                // Revert menu button
+                const menuBtn = document.querySelector('button[onclick="toggleMenu()"]');
+                if (menuBtn) {
+                    const icon = menuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-user-shield');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+                
+                // Hide edit buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.classList.add('hidden');
+                });
+                
+                alert('📚 تم التبديل إلى وضع الموقع (قراءة فقط)');
+            }
+            
+            toggleMenu();
+        }
+
+        // Switch tabs in book details
+        function switchTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-primary-600', 'border-primary-600');
+                btn.classList.add('text-gray-500');
+            });
+            
+            const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'text-primary-600', 'border-primary-600');
+                activeBtn.classList.remove('text-gray-500');
+            }
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            const activeContent = document.getElementById(`tab-${tabId}`);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+            }
+        }
+
+        // Toggle between grid and list view in library
+        function toggleLibraryView(viewType) {
+            const booksGrid = document.getElementById('books-grid');
+            const gridBtn = document.querySelector('.view-toggle[data-view="grid"]');
+            const listBtn = document.querySelector('.view-toggle[data-view="list"]');
+            
+            if (viewType === 'grid') {
+                booksGrid.classList.remove('grid-cols-1');
+                booksGrid.classList.add('grid-cols-3');
+                gridBtn.classList.add('bg-primary-500', 'text-white');
+                gridBtn.classList.remove('text-gray-700');
+                listBtn.classList.remove('bg-primary-500', 'text-white');
+                listBtn.classList.add('text-gray-700');
+            } else {
+                booksGrid.classList.remove('grid-cols-3');
+                booksGrid.classList.add('grid-cols-1');
+                listBtn.classList.add('bg-primary-500', 'text-white');
+                listBtn.classList.remove('text-gray-700');
+                gridBtn.classList.remove('bg-primary-500', 'text-white');
+                gridBtn.classList.add('text-gray-700');
+            }
+        }
+
+        // Load book details (simulated)
+        function loadBookDetails(bookId) {
+            console.log(`Loading book details for: ${bookId}`);
+            // In a real app, this would fetch data from Firebase
+        }
+
+        // Load status view (simulated)
+        function loadStatusView(status) {
+            const statusView = document.getElementById('view-status');
+            let title = '';
+            let description = '';
+            let icon = '';
+            let color = '';
+            
+            // Set content based on status
+            switch(status) {
+                case 'recommended':
+                    title = 'أعجبني ⭐';
+                    description = 'الكتب التي أعجبتني وأوصي بها';
+                    icon = 'fa-star';
+                    color = 'from-yellow-100 to-amber-100';
+                    break;
+                case 'reread':
+                    title = 'أعدت قراءته 🔄';
+                    description = 'الكتب التي استمتعت بإعادة قراءتها';
+                    icon = 'fa-rotate';
+                    color = 'from-purple-100 to-pink-100';
+                    break;
+                default:
+                    title = 'الرفوف';
+                    description = 'كتب مصنفة حسب حالتها';
+                    icon = 'fa-layer-group';
+                    color = 'from-gray-100 to-gray-200';
+            }
+            
+            // Update view
+            statusView.innerHTML = `
+                <div class="mb-6">
+                    <button onclick="navigateTo('library')" class="text-gray-500 hover:text-gray-900 flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span class="text-sm">عودة للمكتبة</span>
+                    </button>
+                    
+                    <div class="bg-gradient-to-r ${color} p-6 rounded-2xl mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                <i class="fa-solid ${icon} text-2xl text-gray-700"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-900">${title}</h2>
+                                <p class="text-sm text-gray-600">${description}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Sample books would be loaded here from Firebase -->
+                    <div class="bg-white p-4 rounded-xl book-shadow text-center">
+                        <p class="text-gray-500">يتم تحميل الكتب...</p>
+                    </div>
+                </div>
+            `;
+            
+            statusView.classList.remove('hidden');
+        }
+
+        // Load quotes view
+        function loadQuotesView() {
+            const quotesView = document.getElementById('view-quotes');
+            
+            quotesView.innerHTML = `
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">كل الاقتباسات</h2>
+                    <p class="text-sm text-gray-500">تصفح واستكشف كل الاقتباسات المحفوظة</p>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+                        <button class="bg-primary-500 text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">الكل</button>
+                        <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">هذا الشهر</button>
+                        <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">الأكثر نسخاً</button>
+                        <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">حسب الكتاب</button>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-5 rounded-2xl book-shadow">
+                        <p class="text-gray-800 text-lg leading-relaxed mb-3">
+                            "القراءة تجعل الإنسان كاملاً، والمحادثة تجعله مستعداً، والكتابة تجعله دقيقاً."
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-bold">فرانسيس بيكون</p>
+                                <p class="text-xs text-gray-500">مقالات • صفحة 42</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show create post modal (app mode only)
+        function showCreatePostModal() {
+            if (!appState.isAppMode) {
+                alert('⚠️ هذه الميزة متاحة فقط في وضع التطبيق (أنت)');
+                return;
+            }
+            
+            document.getElementById('create-post-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Hide create post modal
+        function hideCreatePostModal() {
+            document.getElementById('create-post-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show statuses in menu
+        function showStatuses() {
+            alert('سيتم فتح صفحة الرفوف مع قائمة بالرفوف المتاحة');
+            toggleMenu();
+            // In a full implementation, this would navigate to a status overview page
+        }
+
+        // Show books that changed thinking
+        function showChangedBooks() {
+            alert('سيتم فتح صفحة "كتب غيرت تفكيري" مع الكتب الأكثر تأثيراً');
+            toggleMenu();
+            // In a full implementation, this would navigate to a special collection page
+        }
+
+        // Copy quote to clipboard
+        function copyQuote(quoteText) {
+            navigator.clipboard.writeText(quoteText).then(() => {
+                alert('✓ تم نسخ الاقتباس');
+            });
+        }
+
+        // Filter books by status
+        function filterBooks(status) {
+            console.log(`Filtering books by status: ${status}`);
+            // In a real app, this would filter the book list
+        }
+    </script>
+</body>
+</html>
