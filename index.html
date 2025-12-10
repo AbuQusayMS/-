@@ -40,32 +40,49 @@
                             800: '#075985',
                             900: '#0c4a6e',
                         },
-                        // إضافة ألوان الثيمات الجديدة
-                        'theme-forest': {
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857'
+                        'secondary': {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
                         },
-                        'theme-sunset': {
-                            500: '#f97316',
-                            600: '#ea580c',
-                            700: '#c2410c'
-                        },
-                        'theme-ocean': {
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            700: '#0e7490'
-                        },
-                        'theme-royal': {
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9'
-                        },
-                        'theme-earth': {
-                            500: '#d97706',
-                            600: '#b45309',
-                            700: '#92400e'
+                        // ألوان الرفوف
+                        'shelf': {
+                            'reading': '#fef3c7',
+                            'want_to_read': '#dbeafe',
+                            'liked': '#fce7f3',
+                            'recommended': '#fef9c3',
+                            'life_changing': '#dcfce7',
+                            'thought_provoking': '#ede9fe',
+                            'heavy_but_important': '#f1f5f9',
+                            'emotional': '#fee2e2',
+                            'faded_out': '#fef3c7',
+                            'experimental': '#ecfccb'
                         }
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                        'sans': ['Cairo', 'Tajawal', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'medium': '0 6px 30px rgba(0, 0, 0, 0.08)',
+                        'hard': '0 10px 40px rgba(0, 0, 0, 0.12)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
                     }
                 }
             }
@@ -300,18 +317,22 @@
         <section id="view-home" class="view-section space-y-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">سجلك الأدبي</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">📝 سجلك الأدبي</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">سجل أفكارك واقتباساتك ومراجعاتك هنا</p>
                 </div>
                 <button onclick="showCreatePostModal()" class="btn-sm bg-primary-500 text-white hover:bg-primary-600 flex items-center gap-2">
                     <i class="fa-solid fa-plus"></i>
                     جديد
                 </button>
             </div>
-    
+            
             <!-- فلاتر الفرز -->
             <div class="flex flex-wrap gap-2 pb-2">
                 <button class="sort-btn active px-3 py-1.5 text-sm rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" onclick="sortPosts('newest')">
                     الأحدث
+                </button>
+                <button class="sort-btn px-3 py-1.5 text-sm rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300" onclick="sortPosts('pinned')">
+                    المثبتة
                 </button>
                 <button class="sort-btn px-3 py-1.5 text-sm rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300" onclick="sortPosts('quotes')">
                     الاقتباسات
@@ -323,9 +344,19 @@
                     الملاحظات
                 </button>
             </div>
-    
+            
+            <!-- المنشورات المثبتة -->
+            <div id="pinned-section" class="mb-6">
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-thumbtack text-amber-500"></i>
+                    المنشورات المثبتة
+                </h3>
+                <div id="pinned-posts" class="space-y-3"></div>
+            </div>
+            
             <!-- جميع المنشورات -->
             <div>
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">جميع المنشورات</h3>
                 <div id="home-posts-list" class="space-y-3"></div>
             </div>
         </section>
@@ -333,60 +364,97 @@
         <!-- صفحة كتاباتي -->
         <section id="view-writings" class="view-section hidden">
             <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">كتاباتي</h2>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">📖 كتاباتي</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">كتب مصنّفة حسب علاقتك بها وتأثيرها عليك</p>
             </div>
-    
+            
             <!-- رفوف الكتابات -->
-            <div class="flex flex-col gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 <!-- الاقتباسات -->
-                <div class="card cursor-pointer hover:shadow-medium" onclick="openWritingShelf('quotes')">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <i class="fa-solid fa-quote-right text-blue-600 dark:text-blue-400 text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-medium text-sm mb-1">الاقتباسات</h3>
-                            <p class="text-xs text-gray-500">أجمل ما خطه الآخرون من حكم وأقوال</p>
-                        </div>
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('quotes')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-quote-right text-blue-600 dark:text-blue-400 text-xl"></i>
                     </div>
+                    <h3 class="font-medium text-sm mb-1">الاقتباسات</h3>
+                    <p class="text-xs text-gray-500">أجمل ما خطه الآخرون</p>
                 </div>
-        
+                
                 <!-- المراجعات -->
-                <div class="card cursor-pointer hover:shadow-medium" onclick="openWritingShelf('reviews')">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                            <i class="fa-solid fa-star text-amber-600 dark:text-amber-400 text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-medium text-sm mb-1">المراجعات</h3>
-                            <p class="text-xs text-gray-500">مراجعات مفصلة للكتب التي قرأتها</p>
-                        </div>
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('reviews')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-star text-amber-600 dark:text-amber-400 text-xl"></i>
                     </div>
+                    <h3 class="font-medium text-sm mb-1">المراجعات</h3>
+                    <p class="text-xs text-gray-500">آرائي في الكتب</p>
                 </div>
-        
+                
                 <!-- الملاحظات -->
-                <div class="card cursor-pointer hover:shadow-medium" onclick="openWritingShelf('notes')">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                            <i class="fa-solid fa-note-sticky text-emerald-600 dark:text-emerald-400 text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-medium text-sm mb-1">الملاحظات</h3>
-                            <p class="text-xs text-gray-500">خواطري وتأملاتي الشخصية</p>
-                        </div>
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('notes')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-note-sticky text-emerald-600 dark:text-emerald-400 text-xl"></i>
                     </div>
+                    <h3 class="font-medium text-sm mb-1">الملاحظات</h3>
+                    <p class="text-xs text-gray-500">خواطري وتأملاتي</p>
+                </div>
+                
+                <!-- الأفكار -->
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('thoughts')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-lightbulb text-purple-600 dark:text-purple-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">الأفكار</h3>
+                    <p class="text-xs text-gray-500">تأملات شخصية</p>
                 </div>
             </div>
-    
+            
+            <!-- رفوف إضافية -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4">
+                <!-- رفوف إضافية -->
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('inspirations')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-feather text-pink-600 dark:text-pink-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">إلهامات</h3>
+                    <p class="text-xs text-gray-500">ما ألهمني</p>
+                </div>
+                
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('questions')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-question text-cyan-600 dark:text-cyan-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">أسئلة</h3>
+                    <p class="text-xs text-gray-500">أسئلة تحتاج إجابة</p>
+                </div>
+                
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('summaries')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-file-lines text-orange-600 dark:text-orange-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">ملخصات</h3>
+                    <p class="text-xs text-gray-500">ملخصات الكتب</p>
+                </div>
+                
+                <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openWritingShelf('reflections')">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-brain text-indigo-600 dark:text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-sm mb-1">تأملات</h3>
+                    <p class="text-xs text-gray-500">تأملات عميقة</p>
+                </div>
+            </div>
+            
             <!-- عرض محتويات الرف -->
             <div id="writings-shelf-view" class="hidden animate-fade-in">
-                <div class="mb-6">
-                    <button onclick="backToWritings()" class="icon-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 mb-3">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="backToWritings()" class="icon-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
-                    <h3 id="writing-shelf-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100"></h3>
+                    <div>
+                        <h3 id="writing-shelf-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100"></h3>
+                        <p id="writing-shelf-desc" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                    </div>
                 </div>
-        
+                
                 <div id="writing-shelf-posts" class="space-y-3"></div>
             </div>
         </section>
@@ -395,7 +463,8 @@
         <section id="view-books" class="view-section hidden">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">المكتبة</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">📚 المكتبة</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">مجموعة كتبك الشخصية</p>
                 </div>
                 <button onclick="showCreateBookModal()" class="btn-sm bg-primary-500 text-white hover:bg-primary-600 flex items-center gap-2">
                     <i class="fa-solid fa-plus"></i>
@@ -463,145 +532,125 @@
         <!-- صفحة الرفوف -->
         <section id="view-shelves" class="view-section hidden">
             <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">الرفوف</h2>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">📦 الرفوف</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">كتب مصنّفة حسب علاقتك بها وتأثيرها عليك</p>
             </div>
-    
+            
             <div id="shelves-landing">
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     <!-- الرفوف الرئيسية -->
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('reading')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-reading flex items-center justify-center">
-                                <i class="fa-solid fa-book-open text-amber-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">أقرأه حالياً</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('reading')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-reading flex items-center justify-center">
+                            <i class="fa-solid fa-book-open text-amber-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">أقرأه حالياً</h3>
+                        <p class="text-xs text-gray-500">الكتب التي أتابعها الآن</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('want_to_read')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-want_to_read flex items-center justify-center">
-                                <i class="fa-solid fa-bookmark text-blue-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">أرغب بقراءته</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('want_to_read')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-want_to_read flex items-center justify-center">
+                            <i class="fa-solid fa-bookmark text-blue-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">أرغب بقراءته</h3>
+                        <p class="text-xs text-gray-500">كتب خططت لقراءتها</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('liked')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-liked flex items-center justify-center">
-                                <i class="fa-solid fa-heart text-pink-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">أعجبني</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('liked')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-liked flex items-center justify-center">
+                            <i class="fa-solid fa-heart text-pink-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">أعجبني</h3>
+                        <p class="text-xs text-gray-500">كتب استمتعت بقراءتها</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('recommended')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-recommended flex items-center justify-center">
-                                <i class="fa-solid fa-star text-yellow-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">أنصح به</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('recommended')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-recommended flex items-center justify-center">
+                            <i class="fa-solid fa-star text-yellow-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">أنصح به</h3>
+                        <p class="text-xs text-gray-500">كتب أوصي بها للآخرين</p>
                     </div>
-            
+                    
                     <!-- رفوف إضافية -->
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('life_changing')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-life_changing flex items-center justify-center">
-                                <i class="fa-solid fa-brain text-green-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">غيّر تفكيري</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('life_changing')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-life_changing flex items-center justify-center">
+                            <i class="fa-solid fa-brain text-green-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">غيّر تفكيري</h3>
+                        <p class="text-xs text-gray-500">كتب أثرت على رؤيتي</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('thought_provoking')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-thought_provoking flex items-center justify-center">
-                                <i class="fa-solid fa-lightbulb text-purple-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">حيّرني</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('thought_provoking')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-thought_provoking flex items-center justify-center">
+                            <i class="fa-solid fa-lightbulb text-purple-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">حيّرني</h3>
+                        <p class="text-xs text-gray-500">كتب طرحت أسئلة صعبة</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('heavy_but_important')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-heavy_but_important flex items-center justify-center">
-                                <i class="fa-solid fa-weight-hanging text-gray-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">ثقيل لكن مهم</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('heavy_but_important')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-heavy_but_important flex items-center justify-center">
+                            <i class="fa-solid fa-weight-hanging text-gray-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">ثقيل لكن مهم</h3>
+                        <p class="text-xs text-gray-500">كتب تحتاج لجهد</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('emotional')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-emotional flex items-center justify-center">
-                                <i class="fa-solid fa-heart-crack text-red-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">عاطفي</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('emotional')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-emotional flex items-center justify-center">
+                            <i class="fa-solid fa-heart-crack text-red-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">عاطفي</h3>
+                        <p class="text-xs text-gray-500">كتب أثرت على مشاعري</p>
                     </div>
-            
+                    
                     <!-- رفوف أخرى -->
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('faded_out')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-faded_out flex items-center justify-center">
-                                <i class="fa-solid fa-battery-empty text-yellow-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">بدأ قويًا ثم خفّ</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('faded_out')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-faded_out flex items-center justify-center">
+                            <i class="fa-solid fa-battery-empty text-yellow-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">بدأ قويًا ثم خفّ</h3>
+                        <p class="text-xs text-gray-500">كتب انخفض مستواها</p>
                     </div>
-            
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('experimental')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg bg-shelf-experimental flex items-center justify-center">
-                                <i class="fa-solid fa-flask text-lime-700"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">تجربة</h3>
-                                <p class="text-xs text-gray-500">0 كتاب</p>
-                            </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('experimental')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-shelf-experimental flex items-center justify-center">
+                            <i class="fa-solid fa-flask text-lime-700 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">تجربة</h3>
+                        <p class="text-xs text-gray-500">كتب قرأتها لتجربة نمط جديد</p>
+                    </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('reread')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                            <i class="fa-solid fa-rotate text-teal-700 text-xl"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">أعدت قراءته</h3>
+                        <p class="text-xs text-gray-500">كتب قرأتها أكثر من مرة</p>
+                    </div>
+                    
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('bookmark')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                            <i class="fa-solid fa-bookmark text-rose-700 text-xl"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">للرجوع لاحقًا</h3>
+                        <p class="text-xs text-gray-500">كتب سأعود إليها لاحقاً</p>
                     </div>
                 </div>
             </div>
-    
+            
             <!-- عرض محتويات الرف -->
             <div id="shelves-shelf-view" class="hidden animate-fade-in">
-                <div class="mb-6">
-                    <button onclick="backToShelves()" class="icon-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 mb-3">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="backToShelves()" class="icon-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
-                    <h3 id="shelf-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100"></h3>
+                    <div>
+                        <h3 id="shelf-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100"></h3>
+                        <p id="shelf-desc" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                    </div>
                 </div>
-        
+                
                 <!-- فرز داخل الرف -->
                 <div class="mb-4">
                     <select id="shelf-sort-select" onchange="sortShelfBooks()" class="input-sm">
@@ -611,7 +660,7 @@
                         <option value="year_desc">الأحدث نشراً</option>
                     </select>
                 </div>
-        
+                
                 <!-- كتب الرف -->
                 <div id="shelf-books-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
             </div>
@@ -707,180 +756,44 @@
                     <p class="text-xs text-gray-500 mt-2">النسخ الاحتياطي يحفظ جميع بياناتك بشكل آمن</p>
                 </div>
                 
-        <!-- صفحة الإعدادات -->
-        <section id="view-menu" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">الإعدادات</h2>
-    
-            <!-- الملف الشخصي المتكامل -->
-            <div class="card">
-                <h3 class="font-medium mb-3 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <i class="fa-solid fa-user"></i>
-                    الملف الشخصي
-                </h3>
-        
-                <!-- صورة الشخصية -->
-                <div class="flex flex-col items-center mb-4">
-                    <div id="profile-image-container" class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 mb-3 cursor-pointer" onclick="document.getElementById('profile-image-input').click()">
-                        <img id="profile-image" src="" alt="صورة الشخصية" class="w-full h-full object-cover bg-gray-100 dark:bg-gray-700">
-                        <div id="profile-image-placeholder" class="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-                            <i class="fa-solid fa-user text-3xl text-gray-400"></i>
-                        </div>
-                    </div>
-                    <input type="file" id="profile-image-input" accept="image/*" class="hidden" onchange="uploadProfileImage(event)">
-                    <p class="text-xs text-gray-500">انقر لتغيير الصورة</p>
-                </div>
-        
-                <!-- معلومات الشخصية -->
-                <div class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">الاسم الكامل</label>
-                            <input type="text" id="profile-fullname" class="w-full input-sm" placeholder="الاسم الكامل">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">تاريخ الميلاد</label>
-                            <input type="date" id="profile-birthdate" class="w-full input-sm">
-                        </div>
-                    </div>
-            
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">الجنسية</label>
-                            <input type="text" id="profile-nationality" class="w-full input-sm" placeholder="الجنسية">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">الموقع</label>
-                            <input type="text" id="profile-location" class="w-full input-sm" placeholder="المدينة أو البلد">
-                        </div>
-                    </div>
-            
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">نبذة قصيرة</label>
-                        <textarea id="profile-bio" rows="3" class="w-full input-sm" placeholder="اكتب عن نفسك..."></textarea>
-                    </div>
-            
-                    <!-- إحصائيات القراءة -->
-                    <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
-                        <h4 class="font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">إحصائيات القراءة</h4>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">الكتب المقروءة</label>
-                                <input type="number" id="profile-books-read" class="w-full input-sm" value="0">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">الكتب المفضلة</label>
-                                <input type="number" id="profile-favorite-books" class="w-full input-sm" value="0">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">ساعات القراءة (شهرياً)</label>
-                                <input type="number" id="profile-reading-hours" class="w-full input-sm" value="0">
-                            </div>
-                            <div>
-                               <label class="block text-xs text-gray-500 mb-1">الكتب الحالية</label>
-                                <input type="number" id="profile-current-books" class="w-full input-sm" value="0">
-                            </div>
-                        </div>
-                    </div>
-            
-                    <button onclick="saveProfile()" class="w-full btn-sm bg-primary-500 text-white hover:bg-primary-600">
-                        حفظ الملف الشخصي
-                    </button>
-                </div>
-            </div>
-    
-            <!-- إحصائيات سريعة -->
-            <div class="card">
-                <h3 class="font-medium mb-3 text-gray-900 dark:text-gray-100">إحصائياتك</h3>
-                <div class="grid grid-cols-4 gap-3 text-center">
-                    <div>
-                        <div class="text-lg font-semibold text-primary-600 dark:text-primary-400" id="stats-books">0</div>
-                        <div class="text-xs text-gray-500">الكتب</div>
-                    </div>
-                    <div>
-                        <div class="text-lg font-semibold text-primary-600 dark:text-primary-400" id="stats-posts">0</div>
-                        <div class="text-xs text-gray-500">المنشورات</div>
-                    </div>
-                    <div>
-                        <div class="text-lg font-semibold text-primary-600 dark:text-primary-400" id="stats-quotes">0</div>
-                        <div class="text-xs text-gray-500">الاقتباسات</div>
-                    </div>
-                    <div>
-                        <div class="text-lg font-semibold text-primary-600 dark:text-primary-400" id="stats-reviews">0</div>
-                        <div class="text-xs text-gray-500">المراجعات</div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- الثيمات -->
-            <div class="card">
-                <h3 class="font-medium mb-3 text-gray-900 dark:text-gray-100">الثيمات والألوان</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="default" onclick="selectTheme('default')">
-                        <div class="w-full h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">أساسي</p>
-                    </div>
-            
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="forest" onclick="selectTheme('forest')">
-                        <div class="w-full h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">غابة</p>
-                    </div>
-            
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="sunset" onclick="selectTheme('sunset')">
-                        <div class="w-full h-8 bg-gradient-to-r from-orange-500 to-pink-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">غروب</p>
-                    </div>
-            
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="ocean" onclick="selectTheme('ocean')">
-                        <div class="w-full h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">محيط</p>
-                    </div>
-            
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="royal" onclick="selectTheme('royal')">
-                        <div class="w-full h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">ملكي</p>
-                    </div>
-            
-                    <div class="theme-option p-3 rounded-lg border cursor-pointer" data-theme="earth" onclick="selectTheme('earth')">
-                        <div class="w-full h-8 bg-gradient-to-r from-amber-500 to-brown-500 rounded mb-2"></div>
-                        <p class="text-sm font-medium text-center">أرضي</p>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- النسخ الاحتياطي -->
-            <div class="card">
-                <h3 class="font-medium mb-3 text-gray-900 dark:text-gray-100">النسخ الاحتياطي</h3>
-                <div class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <button onclick="exportBackup()" class="btn-sm bg-emerald-500 text-white hover:bg-emerald-600 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-download"></i>
-                            تصدير
+                <!-- مساعدة -->
+                <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-3">مساعدة</h4>
+                    <div class="space-y-2">
+                        <button onclick="showHelp('tutorial')" class="w-full text-left text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 py-1">
+                            <i class="fa-solid fa-graduation-cap ml-2"></i>
+                            تعليمات الاستخدام
                         </button>
-                
-                        <label class="btn-sm bg-blue-500 text-white hover:bg-blue-600 flex items-center justify-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-upload"></i>
-                            استيراد
-                            <input type="file" id="import-file-input" class="hidden" accept=".json,.zip">
-                        </label>
+                        <button onclick="showHelp('about')" class="w-full text-left text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 py-1">
+                            <i class="fa-solid fa-circle-info ml-2"></i>
+                            عن التطبيق
+                        </button>
+                        <button onclick="showHelp('tips')" class="w-full text-left text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 py-1">
+                            <i class="fa-solid fa-lightbulb ml-2"></i>
+                            نصائح مفيدة
+                        </button>
                     </div>
-                   <p class="text-xs text-gray-500">النسخ الاحتياطي يحفظ جميع بياناتك بشكل آمن</p>
                 </div>
             </div>
-    
-            <!-- الوضع الليلي -->
+            
+            <!-- إعدادات متقدمة -->
             <div class="card">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                            <i class="fa-solid fa-moon text-gray-600 dark:text-gray-300"></i>
-                        </div>
-                        <div>
-                            <div class="font-medium text-gray-900 dark:text-gray-100">الوضع الليلي</div>
-                            <div class="text-xs text-gray-500">تغيير مظهر التطبيق</div>
-                        </div>
-                    </div>
-                    <button id="theme-toggle" class="w-12 h-6 rounded-full bg-gray-300 dark:bg-gray-700 relative" onclick="toggleDarkMode()">
-                        <div class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform duration-300"></div>
+                <h3 class="font-medium mb-3 text-gray-900 dark:text-gray-100">إعدادات متقدمة</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">التحديث التلقائي</span>
+                        <input type="checkbox" id="auto-refresh" class="rounded">
+                    </label>
+                    <label class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">التنبيهات</span>
+                        <input type="checkbox" id="notifications" class="rounded" checked>
+                    </label>
+                    <label class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">حفظ تلقائي</span>
+                        <input type="checkbox" id="auto-save" class="rounded" checked>
+                    </label>
+                    <button onclick="clearCache()" class="w-full btn-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+                        مسح الذاكرة المؤقتة
                     </button>
                 </div>
             </div>
@@ -1522,10 +1435,15 @@
         ];
 
         const WRITING_SHELVES = {
-                'quotes': { title: 'الاقتباسات', desc: 'أجمل ما خطه الآخرون من حكم وأقوال', icon: 'fa-quote-right', color: 'blue' },
-                'reviews': { title: 'المراجعات', desc: 'مراجعات مفصلة للكتب التي قرأتها', icon: 'fa-star', color: 'amber' },
-                'notes': { title: 'الملاحظات', desc: 'خواطري وتأملاتي الشخصية', icon: 'fa-note-sticky', color: 'emerald' }
-};
+            'quotes': { title: 'الاقتباسات', desc: 'أجمل ما خطه الآخرون من حكم وأقوال', icon: 'fa-quote-right', color: 'blue' },
+            'reviews': { title: 'المراجعات', desc: 'مراجعات مفصلة للكتب التي قرأتها', icon: 'fa-star', color: 'amber' },
+            'notes': { title: 'الملاحظات', desc: 'خواطري وتأملاتي الشخصية', icon: 'fa-note-sticky', color: 'emerald' },
+            'thoughts': { title: 'الأفكار', desc: 'تأملات شخصية وأفكار جديدة', icon: 'fa-lightbulb', color: 'purple' },
+            'inspirations': { title: 'إلهامات', desc: 'ما ألهمني من قراءاتي', icon: 'fa-feather', color: 'pink' },
+            'questions': { title: 'أسئلة', desc: 'أسئلة تحتاج إجابة من الكتب', icon: 'fa-question', color: 'cyan' },
+            'summaries': { title: 'ملخصات', desc: 'ملخصات الكتب التي قرأتها', icon: 'fa-file-lines', color: 'orange' },
+            'reflections': { title: 'تأملات', desc: 'تأملات عميقة مستوحاة من القراءة', icon: 'fa-brain', color: 'indigo' }
+        };
 
         const READING_STATUS = {
             'not_started': { text: 'لم أبدأ', color: 'gray' },
@@ -1805,12 +1723,12 @@
         // =========================================================================
         // 4. الوضع الليلي والثيمات
         // =========================================================================
-        
+
         function toggleDarkMode() {
             const isDark = document.documentElement.classList.toggle('dark');
             const toggleBtn = document.getElementById('theme-toggle');
             const circle = toggleBtn.querySelector('div');
-    
+            
             if (isDark) {
                 circle.style.transform = 'translateX(1.75rem)';
                 AppState.settings.mode = 'dark';
@@ -1820,199 +1738,59 @@
                 AppState.settings.mode = 'light';
                 localStorage.setItem('mode', 'light');
             }
-    
+            
             // حفظ الإعدادات
             DB.save('settings', AppState.settings);
         }
 
-        // دالة فتح نافذة الإعدادات
         function showSettingsModal() {
             document.getElementById('settings-modal').classList.remove('hidden');
         }
 
-        // دالة إغلاق نافذة الإعدادات
         function hideSettingsModal() {
             document.getElementById('settings-modal').classList.add('hidden');
         }
 
-        // دالة فتح إعدادات الثيمات (نفس نافذة الإعدادات)
         function showThemeSettings() {
             document.getElementById('settings-modal').classList.remove('hidden');
         }
 
-        // دالة اختيار الثيم مع التبسيط
         function selectTheme(themeKey) {
-            // أولاً: إزالة جميع فئات الثيمات السابقة
-            const themes = ['classic', 'light', 'dark', 'ocean', 'forest', 'sunset', 'royal', 'earth'];
-            themes.forEach(theme => {
-                document.documentElement.classList.remove(`theme-${theme}`);
-            });
+            // إزالة الثيمات السابقة
+            document.documentElement.classList.remove('theme-classic', 'theme-light', 'theme-dark', 'theme-ocean');
             
-            // ثانياً: إضافة فئة الثيم الجديد (إذا لم يكن 'default')
-            if (themeKey !== 'default') {
-                document.documentElement.classList.add(`theme-${themeKey}`);
-            }
-    
-            // ثالثاً: تحديث مظهر أزرار الاختيار
+            // تطبيق الثيم الجديد
+            document.documentElement.classList.add(`theme-${themeKey}`);
+            
+            // تحديث حالة الأزرار
             document.querySelectorAll('.theme-option').forEach(option => {
                 if (option.dataset.theme === themeKey) {
-                    option.classList.add('border-primary-500', 'border-2');
+                    option.classList.add('border-primary-500');
                 } else {
-                    option.classList.remove('border-primary-500', 'border-2');
-                    option.classList.add('border-transparent');
+                    option.classList.remove('border-primary-500');
                 }
             });
-    
-            // رابعاً: حفظ الإعدادات
+            
+            // حفظ الإعدادات
             AppState.settings.theme = themeKey;
             localStorage.setItem('theme', themeKey);
             DB.save('settings', AppState.settings);
-    
-            // خامساً: إظهار رسالة تأكيد
-            showToast(`تم تطبيق الثيم: ${getThemeName(themeKey)}`, 'success');
+            
+            showToast(`تم تطبيق الثيم: ${themeKey}`, 'success');
         }
 
-        // دالة مساعدة للحصول على اسم الثيم بالعربية
-        function getThemeName(themeKey) {
-            const themeNames = {
-                'default': 'الافتراضي',
-                'classic': 'كلاسيكي',
-                'light': 'فاتح',
-                'dark': 'داكن',
-                'ocean': 'محيط',
-                'forest': 'غابة',
-                'sunset': 'غروب',
-                'royal': 'ملكي',
-                'earth': 'أرضي'
-            };
-            return themeNames[themeKey] || themeKey;
-        }
-
-        // دالة تطبيق الثيم والوضع الليلي معاً
         function applyTheme(themeKey, isDark) {
             // تطبيق الثيم
             selectTheme(themeKey);
-    
+            
             // تطبيق الوضع الليلي
             if (isDark) {
                 document.documentElement.classList.add('dark');
                 const toggleBtn = document.getElementById('theme-toggle');
-                if (toggleBtn) {
-                    const circle = toggleBtn.querySelector('div');
-                    circle.style.transform = 'translateX(1.75rem)';
-               }
+                const circle = toggleBtn.querySelector('div');
+                circle.style.transform = 'translateX(1.75rem)';
             } else {
                 document.documentElement.classList.remove('dark');
-            }
-        }
-
-        // دالة تحميل الثيم عند بداية التطبيق
-        function loadTheme() {
-            // جلب الثيم المحفوظ
-            const savedTheme = localStorage.getItem('theme') || 'default';
-            const savedMode = localStorage.getItem('mode') || 'light';
-    
-            // تطبيق الثيم
-            selectTheme(savedTheme);
-    
-            // تطبيق الوضع الليلي
-            if (savedMode === 'dark') {
-                document.documentElement.classList.add('dark');
-                const toggleBtn = document.getElementById('theme-toggle');
-                if (toggleBtn) {
-                    const circle = toggleBtn.querySelector('div');
-                    circle.style.transform = 'translateX(1.75rem)';
-                }
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-    
-            // تحديث حالة الإعدادات
-            AppState.settings.theme = savedTheme;
-            AppState.settings.mode = savedMode;
-        }
-
-        // إضافة أنماط CSS للثيمات الجديدة
-        function addThemeStyles() {
-            // إضافة أنماط CSS للثيمات الجديدة
-            const style = document.createElement('style');
-            style.innerHTML = `
-                /* ثيم الغابة - ألوان خضراء */
-                .theme-forest {
-                    --primary-500: #10b981;
-                    --primary-600: #059669;
-                    --primary-700: #047857;
-                }
-        
-                /* ثيم الغروب - ألوان برتقالية/وردية */
-                .theme-sunset {
-                    --primary-500: #f97316;
-                    --primary-600: #ea580c;
-                    --primary-700: #c2410c;
-                }
-        
-                /* ثيم المحيط - ألوان زرقاء فاتحة */
-                .theme-ocean {
-                    --primary-500: #06b6d4;
-                    --primary-600: #0891b2;
-                    --primary-700: #0e7490;
-                }
-        
-                /* ثيم ملكي - ألوان بنفسجية */
-                .theme-royal {
-                    --primary-500: #8b5cf6;
-                    --primary-600: #7c3aed;
-                    --primary-700: #6d28d9;
-                }
-        
-                /* ثيم أرضي - ألوان بنية/ذهبية */
-                .theme-earth {
-                    --primary-500: #d97706;
-                    --primary-600: #b45309;
-                    --primary-700: #92400e;
-                }
-        
-                /* تطبيق الألوان على العناصر */
-                .theme-forest .bg-primary-500 { background-color: var(--primary-500) !important; }
-                .theme-forest .text-primary-500 { color: var(--primary-500) !important; }
-                .theme-forest .border-primary-500 { border-color: var(--primary-500) !important; }
-        
-                .theme-sunset .bg-primary-500 { background-color: var(--primary-500) !important; }
-                .theme-sunset .text-primary-500 { color: var(--primary-500) !important; }
-                .theme-sunset .border-primary-500 { border-color: var(--primary-500) !important; }
-        
-                .theme-ocean .bg-primary-500 { background-color: var(--primary-500) !important; }
-                .theme-ocean .text-primary-500 { color: var(--primary-500) !important; }
-                .theme-ocean .border-primary-500 { border-color: var(--primary-500) !important; }
-        
-                .theme-royal .bg-primary-500 { background-color: var(--primary-500) !important; }
-                .theme-royal .text-primary-500 { color: var(--primary-500) !important; }
-                .theme-royal .border-primary-500 { border-color: var(--primary-500) !important; }
-        
-                .theme-earth .bg-primary-500 { background-color: var(--primary-500) !important; }
-                .theme-earth .text-primary-500 { color: var(--primary-500) !important; }
-                .theme-earth .border-primary-500 { border-color: var(--primary-500) !important; }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // في دالة initApp، نضيف تحميل الثيم
-        async function initApp() {
-            try {
-                showLoading();
-                await DB.init();
-                await setupInitialData();
-                await loadData();
-                setupEventListeners();
-                setupSearchIndexes();
-                navigateTo('home');
-                hideLoading();
-        
-                // إزالة الإشعار التلقائي حسب الطلب
-            } catch (error) {
-                console.error('❌ خطأ في تهيئة التطبيق:', error);
-                showToast('حدث خطأ في تهيئة التطبيق', 'error');
-                hideLoading();
             }
         }
 
@@ -2021,8 +1799,25 @@
         // =========================================================================
 
         function loadHomePosts() {
+            loadPinnedPosts();
             loadAllPosts();
         }
+
+        function loadPinnedPosts() {
+            const container = document.getElementById('pinned-posts');
+            if (!container) return;
+            
+            const pinnedPosts = AppState.posts.filter(post => post.pinned === true);
+            
+            if (pinnedPosts.length === 0) {
+                container.innerHTML = `
+                    <div class="card text-center py-6 text-gray-500">
+                        <i class="fa-solid fa-thumbtack text-2xl mb-2"></i>
+                        <p>لا توجد منشورات مثبتة</p>
+                    </div>
+                `;
+                return;
+            }
             
             // ترتيب حسب الأحدث
             const sortedPosts = [...pinnedPosts].sort((a, b) => b.created_at - a.created_at);
@@ -2169,7 +1964,7 @@
 
         function sortPosts(sortType, posts = AppState.posts) {
             AppState.currentPostSort = sortType;
-    
+            
             // تحديث أزرار الفرز
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 if (btn.textContent.includes(sortType) || (sortType === 'newest' && btn.textContent.includes('الأحدث'))) {
@@ -2180,9 +1975,9 @@
                     btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
                 }
             });
-    
+            
             let sortedPosts = [...posts];
-    
+            
             switch(sortType) {
                 case 'newest':
                     sortedPosts.sort((a, b) => b.created_at - a.created_at);
@@ -2190,23 +1985,16 @@
                 case 'oldest':
                     sortedPosts.sort((a, b) => a.created_at - b.created_at);
                     break;
-                case 'quotes':
-                    sortedPosts = sortedPosts.filter(p => p.type === 'quote');
-                    sortedPosts.sort((a, b) => b.created_at - a.created_at);
-                    break;
-                case 'reviews':
-                    sortedPosts = sortedPosts.filter(p => p.type === 'review');
-                    sortedPosts.sort((a, b) => b.created_at - a.created_at);
-                    break;
-                case 'notes':
-                    sortedPosts = sortedPosts.filter(p => p.type === 'note');
+                case 'pinned':
+                    sortedPosts = sortedPosts.filter(p => p.pinned);
                     sortedPosts.sort((a, b) => b.created_at - a.created_at);
                     break;
             }
-    
+            
             // إذا كنا في الصفحة الرئيسية، نحدّث العرض
             if (AppState.currentView === 'home') {
                 loadAllPosts();
+                loadPinnedPosts();
             }
         }
 
@@ -2238,16 +2026,17 @@
         function openWritingShelf(type) {
             const shelf = WRITING_SHELVES[type];
             if (!shelf) return;
-    
+            
             AppState.currentWritingShelf = type;
-    
+            
             // إخفاء الرفوف وإظهار المحتوى
-            document.querySelector('#view-writings > div:nth-child(2)').classList.add('hidden');
+            document.getElementById('view-writings').querySelector('div:nth-child(2)').classList.add('hidden');
             document.getElementById('writings-shelf-view').classList.remove('hidden');
             
-            // تحديث العنوان فقط
+            // تحديث العنوان والوصف
             document.getElementById('writing-shelf-title').textContent = shelf.title;
-    
+            document.getElementById('writing-shelf-desc').textContent = shelf.desc;
+            
             // تحميل المنشورات
             loadWritingShelfPosts(type);
         }
@@ -2255,9 +2044,9 @@
         function loadWritingShelfPosts(type) {
             const container = document.getElementById('writing-shelf-posts');
             if (!container) return;
-    
+            
             let filteredPosts = [];
-    
+            
             switch(type) {
                 case 'quotes':
                     filteredPosts = AppState.posts.filter(p => p.type === 'quote');
@@ -2268,13 +2057,28 @@
                 case 'notes':
                     filteredPosts = AppState.posts.filter(p => p.type === 'note');
                     break;
+                case 'thoughts':
+                    filteredPosts = AppState.posts.filter(p => p.type === 'thought');
+                    break;
+                case 'inspirations':
+                    filteredPosts = AppState.posts.filter(p => p.tags && p.tags.includes('إلهام'));
+                    break;
+                case 'questions':
+                    filteredPosts = AppState.posts.filter(p => p.content.includes('؟') || (p.tags && p.tags.includes('سؤال')));
+                    break;
+                case 'summaries':
+                    filteredPosts = AppState.posts.filter(p => p.tags && p.tags.includes('ملخص'));
+                    break;
+                case 'reflections':
+                    filteredPosts = AppState.posts.filter(p => p.tags && p.tags.includes('تأمل'));
+                    break;
             }
-    
+            
             if (filteredPosts.length === 0) {
                 container.innerHTML = `
                     <div class="card text-center py-8 text-gray-500">
                         <i class="fa-solid fa-feather text-2xl mb-2"></i>
-                        <p>لا توجد ${type === 'quotes' ? 'اقتباسات' : type === 'reviews' ? 'مراجعات' : 'ملاحظات'} بعد</p>
+                        <p>لا توجد ${shelf.title.toLowerCase()} بعد</p>
                         <button onclick="showCreatePostModal()" class="btn-sm bg-primary-500 text-white mt-3">
                             إضافة جديد
                         </button>
@@ -2282,9 +2086,9 @@
                 `;
                 return;
             }
-    
+            
             filteredPosts.sort((a, b) => b.created_at - a.created_at);
-           container.innerHTML = filteredPosts.map(post => renderPostCard(post, false)).join('');
+            container.innerHTML = filteredPosts.map(post => renderPostCard(post, false)).join('');
         }
 
         function backToWritings() {
@@ -2546,23 +2350,19 @@
         function renderShelvesGrid() {
             const grid = document.getElementById('shelves-landing').querySelector('.grid');
             if (!grid) return;
-    
-            grid.innerHTML = SHELVES.slice(0, 10).map(shelf => {
+            
+            grid.innerHTML = SHELVES.map(shelf => {
                 const count = AppState.books.filter(book => 
                     Array.isArray(book.statuses) && book.statuses.includes(shelf.key)
                 ).length;
-        
+                
                 return `
-                    <div class="card cursor-pointer hover:shadow-medium" onclick="openShelf('${shelf.key}')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-lg ${shelf.color} flex items-center justify-center">
-                                <i class="fa-solid ${shelf.icon} text-gray-800"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm mb-1">${shelf.title}</h3>
-                                <p class="text-xs text-gray-500">${count} كتاب</p>
-                            </div>
+                    <div class="card cursor-pointer hover:shadow-medium text-center" onclick="openShelf('${shelf.key}')">
+                        <div class="w-14 h-14 mx-auto mb-3 rounded-xl ${shelf.color} flex items-center justify-center">
+                            <i class="fa-solid ${shelf.icon} text-gray-800 text-xl"></i>
                         </div>
+                        <h3 class="font-medium text-sm mb-1">${shelf.title}</h3>
+                        <p class="text-xs text-gray-500">${count} كتاب</p>
                     </div>
                 `;
             }).join('');
@@ -3621,22 +3421,13 @@
 
         async function saveProfile() {
             try {
-                const profileData = {
-                    fullName: document.getElementById('profile-fullname').value,
-                    birthdate: document.getElementById('profile-birthdate').value,
-                    nationality: document.getElementById('profile-nationality').value,
-                    location: document.getElementById('profile-location').value,
-                    bio: document.getElementById('profile-bio').value,
-                    stats: {
-                        booksRead: parseInt(document.getElementById('profile-books-read').value) || 0,
-                        favoriteBooks: parseInt(document.getElementById('profile-favorite-books').value) || 0,
-                        readingHours: parseInt(document.getElementById('profile-reading-hours').value) || 0,
-                        currentBooks: parseInt(document.getElementById('profile-current-books').value) || 0
-                    }
-                };
-        
-                await DB.save('profile', profileData);
-                showToast('تم حفظ الملف الشخصي بنجاح', 'success');
+                const name = document.getElementById('profile-name').value.trim();
+                const bio = document.getElementById('profile-bio').value.trim();
+                
+                AppState.profile = { name, bio };
+                await DB.save('profile', AppState.profile);
+                
+                showToast('تم حفظ الملف الشخصي', 'success');
             } catch (error) {
                 console.error('❌ خطأ في حفظ الملف الشخصي:', error);
                 showToast('حدث خطأ في حفظ الملف الشخصي', 'error');
